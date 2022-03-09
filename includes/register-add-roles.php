@@ -27,12 +27,4 @@ remove_role('dodo_user');
 
 }
 
-//Plugin Activation Hook
-register_activation_hook(__FILE__, 'dodo_add_user_role');
-
-
-// Plugin Deactivation Action
-register_deactivation_hook(__FILE__, 'dodo_user_deregister_role');
-
-
 ?>
