@@ -12,9 +12,18 @@
 require_once(plugin_dir_path(__FILE__) . 'public\shortcode.php');
 require_once(plugin_dir_path(__FILE__) . 'includes\register-add-roles.php');
 require_once(plugin_dir_path(__FILE__) . 'admin\add-admin-menu.php');
+require_once(plugin_dir_path(__FILE__) . 'includes\database-manager.php');
+require_once(plugin_dir_path(__FILE__) . 'includes\api.php');
+require_once(plugin_dir_path(__FILE__) . 'init.php');
+
 
 defined('ABSPATH') or die('Unauthorized Access');
 
+
+
+
+// Initial Activation 
+activation_initial_functions();
 
 //Plugin Activation Hook
 register_activation_hook(__FILE__, 'dodo_add_user_role');
