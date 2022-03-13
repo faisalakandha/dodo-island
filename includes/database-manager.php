@@ -20,4 +20,17 @@ dbDelta( $sql );
 
 }
 
+function createOrUpdateDatabase($res)
+{
+    global $wpdb;
+
+    $result = $wpdb->get_results ( "
+        SELECT * 
+        FROM  {$wpdb->prefix}dodo_island_manager
+            WHERE island_name = {$res->island}
+    " );
+
+
+}
+
 ?>
