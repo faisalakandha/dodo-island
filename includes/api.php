@@ -1,36 +1,48 @@
 <?php
 
-//require_once(plugin_dir_path(__FILE__) . 'database-manager.php');
+require_once(plugin_dir_path(__FILE__) . '/includes/database-operations.php');
 
 add_action('rest_api_init', function () {
+
     register_rest_route( 'dodo/v1', 'codes', array(
         'methods' => 'POST',
         'callback' => 'create_dodo_codes_from_data'
     ));
 });
+
 function create_dodo_codes_from_data($req) {
-    $response['island'] = $req['island'];
-    $response['code'] = $req['code'];
-    $response['protection'] = $req['protection'];
+   
+    $parameters = $req->get_params();
 
-    $res = new WP_REST_Response($response);
+    $island = $parameters['island'];
+    $code = $parameters['code'];
 
-    if(is_wp_error($res))
+    if(isset($island) && isset($code))
     {
-        $error_message = $response->get_error_message();
-        echo 'Something went wrong ' + $error_message;
-        $res->set_status(500);
+        createOrUpdateDatabase($island, $code);
+
+        return new WP_REST_Response(
+            array(
+              'status' => 200,
+              'response' => "Successfully Posted",
+              'body_response' => $island . ' '. $code
+            )
+          );
+
     }
 
     else 
     {
-        //createOrUpdateDatabase($response);
-        $res->set_status(200);
-        return ['req' => $res];
+        return new WP_REST_Response(
+            array(
+              'status' => 500,
+              'response' => "Warning Error !",
+              'body_response' => NULL
+            )
+          );
+        
     }
-
-    return;
-
+  
 }
 
 ?>
