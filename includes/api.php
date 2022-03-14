@@ -16,9 +16,16 @@ function create_dodo_codes_from_data($req) {
 
     $island = $parameters['island'];
     $code = $parameters['code'];
+    $username = $parameters['username'];
+    $password = $parameters['password'];
 
     if(isset($island) && isset($code))
     {
+        $userdata = get_user_by('login', $username);
+        $passdata = wp_check_password($password, $userdata->user_pass, $userdata->ID);
+
+        if($userdata && $passdata)
+        {
         createOrUpdateDatabase($island, $code);
 
         return new WP_REST_Response(
@@ -28,7 +35,18 @@ function create_dodo_codes_from_data($req) {
               'body_response' => $island . ' '. $code
             )
           );
-
+        }
+        
+        else 
+        {
+            return new WP_REST_Response(
+                array(
+                  'status' => 401,
+                  'response' => "No Authentication",
+                  'body_response' => "You don't have permission here !"
+                )
+              );
+        }
     }
 
     else 
