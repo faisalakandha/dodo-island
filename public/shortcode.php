@@ -15,8 +15,11 @@ function dotiavatar_function() {
     foreach ( $result as $print ) {
     ?>
     <tr>
+    <?php if($print->protection == 0) { ?>    
     <td><?php echo $print->island_name;?></td>
-    <td><?php echo $print->dodo_code;?></td>
+    <td><?php echo $print->dodo_code; } else {?></td>
+    <td><?php echo $print->island_name;?></td>
+    <td><a href="">Click to subscribe and show the dodo code</a> <?php } ?></td>
     </tr>
     <?php
     }
