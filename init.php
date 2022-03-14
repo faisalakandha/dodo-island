@@ -12,7 +12,6 @@ function activation_initial_functions()
 {
     create_dodo_database();
     dodo_add_user_role();
-
 }
 
 ?>
