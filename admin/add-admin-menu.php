@@ -24,16 +24,13 @@ function register_my_custom_menu_page()
 
         global $wpdb;
 
-        $result = $wpdb->get_results ( "
+        $result = $wpdb->get_row ( "
             SELECT * 
             FROM  {$wpdb->prefix}dodo_island_manager
                 WHERE island_name = 'James'
         " );
         
-        foreach ( $result as $page )
-        {
-           echo $page->island_name.'<br/>';
-        }
+        echo $result->island_name;
         echo '<h1>Dodo Codes Admin</h1>';
 
     }
