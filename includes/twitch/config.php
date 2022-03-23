@@ -1,13 +1,10 @@
 <?php
 
-define( 'TWITCH_CLIENT_ID', 'nl57bs873rsr8z6jbx61z6zbixjx6n' );
-define( 'TWITCH_CLIENT_SECRET', '7uwb5op40otgy42eunbgsaist5ghrb' );
-define( 'TWITCH_REDIRECT_URI', 'http://localhost/test/' );
-define( 'LOGOUT_PAGE', 'http://localhost/sample-page/' );
+define( 'TWITCH_CLIENT_ID', 'mt3k9fydf1slkdyish73l6umk24j4o' );
+define( 'TWITCH_CLIENT_SECRET', '937jap3h4kdxfnbi0zom6sdo0j83ht' );
+define( 'TWITCH_REDIRECT_URI', 'https://dazzlingduckgames.com/dodo-page/' );
+define( 'LOGOUT_PAGE', 'https://dazzlingduckgames.com/subdodo/' );
 define( 'TWITCH_SUBSCRIPTION_PAGE', 'https://www.twitch.tv/subs/dazzlingduckgames' );
 define( 'BROADCASTER_ID', '609086708' );
-
-
-
 
 ?>
