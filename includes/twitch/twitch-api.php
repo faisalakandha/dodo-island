@@ -3,7 +3,7 @@ session_start();
 	/**
 	 * Class for handling all calls to the Twitch API
 	 *
-	 * @author Justin Stolpe
+	 * @author H.A.B.M. Faisal Akandha
 	 */
 	class eciTwitchApi {
 		/**
@@ -98,6 +98,8 @@ session_start();
 			$status = $accessToken['status'];
 			$message = $accessToken['message'];
 
+			global $subscriptionStatus;
+
 			if ( 'ok' == $status ) { // we got an access token1
 				// set access token and refresh token class vars 
 				$this->_accessToken = $accessToken['api_data']['access_token'];
@@ -105,92 +107,37 @@ session_start();
 
 				// get user info
 				$userInfo = $this->getUserInfo();
-				//print_r($userInfo);
+				$userData = $userInfo['api_data']['data'][0];
+
 				// save status and message from get user info call
 				$status = $userInfo['status'];
 				$message = $userInfo['message'];
-				
-				
+
 				if ( 'ok' == $userInfo['status'] && isset( $userInfo['api_data']['data'][0] ) ) { // we have user info!
 					// log user in with info from get user info api call
-					$this->_getUserSubscription( $userInfo['api_data']['data'][0] );
+					$subscriptionStatus = $this->_getUserSubscription( $userInfo['api_data']['data'][0] );
 				}
 				
 			}
 
 			return array( // return status and message of login
 				'status' => $status,
-				'message' => $message
+				'message' => $message,
+				'sub_status' => $subscriptionStatus,
+				'username' => $userData['display_name']
 			);
 		}
+
+		
 
 		private function _getUserSubscription($apiUserInfo)
 		{
 			$user_id = $apiUserInfo['id'];
 			$userSubInfo = $this->getSubInfo($user_id);
-			print_r($userSubInfo);
+			$result = $userSubInfo['api_data']['status'];
+			return $result;
 		}
 
-		/**
-		 * Log a user in
-		 *
-		 * @param array $apiUserInfo user info from Twitch
-		 *
-		 * @return void
-		 */
-		private function _logUserInWithTwitch( $apiUserInfo ) {
-			// save user info and tokens in the session
-			$_SESSION['twitch_user_info'] = $apiUserInfo;
-			$_SESSION['twitch_user_info']['access_token'] = $this->_accessToken;
-			$_SESSION['twitch_user_info']['refresh_token'] = $this->_refreshToken;
-
-			// boolean if user has signed up on our site before using social to login
-			$_SESSION['eci_login_required_to_connect_twitch'] = false;
-		
-			// check for user with twitch id
-			$userInfoWithId = getRowWithValue( 'users', 'twitch_user_id', $apiUserInfo['id'] );
-
-			// check for user with email
-			$userInfoWithEmail = getRowWithValue( 'users', 'email', $apiUserInfo['email'] );
-		
-			if ( $userInfoWithId || ( $userInfoWithEmail && !$userInfoWithEmail['password'] ) ) { // user was found by email/id log them in
-				// get user id
-				$userId = $userInfoWithId ? $userInfoWithId['id'] : $userInfoWithEmail['id'];
-
-				// save twitch id and tokens to the user
-				updateRow( 'users', 'twitch_user_id', $apiUserInfo['id'], $userId );
-				updateRow( 'users', 'twitch_access_token', $this->_accessToken, $userId );
-				updateRow( 'users', 'twitch_refresh_token', $this->_refreshToken, $userId );
-
-				// get user info
-				$userInfo = getRowWithValue( 'users', 'id', $userId );
-
-				// update session so the user is logged in
-				$_SESSION['is_logged_in'] = true;
-				$_SESSION['user_info'] = $userInfo;
-			} elseif ( $userInfoWithEmail && !$userInfoWithEmail['twitch_user_id'] ) { // user needs to enter their password to connect the account
-				$_SESSION['eci_login_required_to_connect_twitch'] = true;
-			} else { // user was not found in our database, sign them up and log them in
-				$signupUserInfo = array( // data we need to insert the user in our database
-					'email' => $apiUserInfo['email'], // email from Twitch response
-					'first_name' => $apiUserInfo['display_name'], // using display_name as first name cause not first name in Twitch response
-					'last_name' => '', // no last name in Twitch response
-					'twitch_user_id' => $apiUserInfo['id'], // Twitch id from Twitch response
-					'twitch_access_token' => $this->_accessToken, // access token from Twitch response
-					'twitch_refresh_token' => $this->_refreshToken // refresh token from Twitch response
-				);
-
-				// sign user up
-				$userId = signUserUp( $signupUserInfo );
-
-				// get user info
-				$userInfo = getRowWithValue( 'users', 'id', $userId );
-
-				// update session so the user is logged in
-				$_SESSION['is_logged_in'] = true;
-				$_SESSION['user_info'] = $userInfo;
-			}
-		}
 
 		/**
 		 * Get a users info from Twitch
