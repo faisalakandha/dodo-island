@@ -25,19 +25,21 @@ $twitchLoginUrl = $eciTwitchApi->getLoginUrl(TWITCH_REDIRECT_URI);
 .twitch-button-container:hover {
 	background: #772ce8;
 }
+
+.section-action-container {
+	margin-top: 20px;
+	text-align: center;
+    width: 20%;
+}
     </style>
 </head>
 
 <body>
 
-<?php
-
-
-?>
 <div class="section-action-container">
 							<a href="<?php echo $twitchLoginUrl; ?>" class="a-twitch">
 								<div class="twitch-button-container">
-									Login with Twitch (PHP)
+									Login with Twitch
 								</div>
 							</a>
 						</div>

@@ -9,12 +9,12 @@ session_start();
 		/**
 		 * @var api authorization domain
 		 */
-		const TWITTER_ID_DOMAIN = 'https://id.twitch.tv/';
+		const TWITCH_ID_DOMAIN = 'https://id.twitch.tv/';
 
 		/**
 		 * @var api endpoint calls domain
 		 */
-		const TWITTER_API_DOMAIN = 'https://api.twitch.tv/helix/';
+		const TWITCH_API_DOMAIN = 'https://api.twitch.tv/helix/';
 
 		/**
 		 * @var client id
@@ -65,7 +65,7 @@ session_start();
 		 */
 		public function getLoginUrl( $redirectUri ) {
 			// request endpoint
-			$endpoint = self::TWITTER_ID_DOMAIN . 'oauth2/authorize';
+			$endpoint = self::TWITCH_ID_DOMAIN . 'oauth2/authorize';
 
 			// store state so we can check it once the user comes back to our redirect uri
 			$_SESSION['twitch_state'] = md5( microtime() . mt_rand() );
@@ -99,6 +99,7 @@ session_start();
 			$message = $accessToken['message'];
 
 			global $subscriptionStatus;
+			global $userData;
 
 			if ( 'ok' == $status ) { // we got an access token1
 				// set access token and refresh token class vars 
@@ -148,7 +149,7 @@ session_start();
 		 */
 		public function getUserInfo() {
 			// requet endpoint
-			$endpoint = self::TWITTER_API_DOMAIN . 'users';
+			$endpoint = self::TWITCH_API_DOMAIN . 'users';
 
 			$apiParams = array( // params for our api call
 				'endpoint' => $endpoint,
@@ -162,14 +163,16 @@ session_start();
 		}
 
 		public function getSubInfo($user_id) {
+			global $broadcaster;
+			$broadcaster =  constant("BROADCASTER_ID");
 			// requet endpoint
-			$endpoint = self::TWITTER_API_DOMAIN . 'user';
+			$endpoint = self::TWITCH_API_DOMAIN . 'user';
 
 			$apiParams = array( // params for our api call
 				'endpoint' => $endpoint,
 				'type' => 'SUB',
 				'authorization' => $this->getAuthorizationHeaders(),
-				'url_params' => array('broadcaster_id' => '781737842', 'user_id' => $user_id)
+				'url_params' => array('broadcaster_id' =>  $broadcaster, 'user_id' => $user_id)
 			);
 
 			// make api call and return response
@@ -200,7 +203,7 @@ session_start();
 		 */
 		public function getTwitchAccessToken( $code, $redirectUri ) {
 			// requet endpoint
-			$endpoint = self::TWITTER_ID_DOMAIN . 'oauth2/token';
+			$endpoint = self::TWITCH_ID_DOMAIN . 'oauth2/token';
 
 			$apiParams = array( // params for our api call
 				'endpoint' => $endpoint,
