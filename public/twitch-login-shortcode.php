@@ -1,5 +1,5 @@
-<?php require_once(plugin_dir_path(__FILE__) . 'includes/twitch/twitch-api.php'); 
-require_once(plugin_dir_path(__FILE__) . 'includes/twitch/config.php');
+<?php require_once(plugin_dir_path(__FILE__) . '../includes/twitch/twitch-api.php'); 
+require_once(plugin_dir_path(__FILE__) . '../includes/twitch/config.php');
 
 
 function twitch_dodo () { 

@@ -1,6 +1,6 @@
 <?php
 
-require_once(plugin_dir_path(__FILE__) . '/includes/database-operations.php');
+require_once(plugin_dir_path(__FILE__) . '../includes/database-operations.php');
 
 add_action('rest_api_init', function () {
 

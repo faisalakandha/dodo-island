@@ -1,6 +1,6 @@
 <?php
-require_once(plugin_dir_path(__FILE__) . 'includes/twitch/config.php');
-require_once(plugin_dir_path(__FILE__) . 'includes/twitch/twitch-api.php');
+require_once(plugin_dir_path(__FILE__) . '../includes/twitch/config.php');
+require_once(plugin_dir_path(__FILE__) . '../includes/twitch/twitch-api.php');
 
 
 function dodocodes_function() { 
@@ -23,6 +23,7 @@ function dodocodes_function() {
     ob_start();
     ?>
     <center>
+        <?php print_r(plugin_dir_path(__FILE__) ); ?>
     <h3>DazzlingDuckGames Dodo Codes</h3>
     <hr>
     <a href="<?php echo LOGOUT_PAGE ?>"><button style="background-color: turquoise; border: none; border-radius: 5px; color: #333; /* Dark grey */ padding: 15px 32px">Logout</button></a>
