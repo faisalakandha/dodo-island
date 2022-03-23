@@ -10,6 +10,7 @@
 **/
 
 require_once(plugin_dir_path(__FILE__) . 'public\shortcode.php');
+require_once(plugin_dir_path(__FILE__) . 'public\twitch-login-shortcode.php');
 require_once(plugin_dir_path(__FILE__) . 'includes\register-add-roles.php');
 require_once(plugin_dir_path(__FILE__) . 'admin\add-admin-menu.php');
 require_once(plugin_dir_path(__FILE__) . 'includes\database-manager.php');
