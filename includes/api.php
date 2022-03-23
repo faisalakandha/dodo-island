@@ -6,7 +6,8 @@ add_action('rest_api_init', function () {
 
     register_rest_route( 'dodo/v1', 'codes', array(
         'methods' => 'POST',
-        'callback' => 'create_dodo_codes_from_data'
+        'callback' => 'create_dodo_codes_from_data',
+        'permission_callback' => '__return_true'
     ));
 });
 
