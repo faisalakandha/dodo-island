@@ -135,8 +135,7 @@ session_start();
 		{
 			$user_id = $apiUserInfo['id'];
 			$userSubInfo = $this->getSubInfo($user_id);
-			$result = $userSubInfo['api_data']['status'];
-			return $result;
+			return $userSubInfo;
 		}
 
 
@@ -163,20 +162,24 @@ session_start();
 		}
 
 		public function getSubInfo($user_id) {
-			global $broadcaster;
-			$broadcaster =  constant("BROADCASTER_ID");
-			// requet endpoint
-			$endpoint = self::TWITCH_API_DOMAIN . 'user';
+            $ch = curl_init();
 
-			$apiParams = array( // params for our api call
-				'endpoint' => $endpoint,
-				'type' => 'SUB',
-				'authorization' => $this->getAuthorizationHeaders(),
-				'url_params' => array('broadcaster_id' =>  $broadcaster, 'user_id' => $user_id)
-			);
+            curl_setopt($ch, CURLOPT_URL, 'https://api.twitch.tv/helix/subscriptions/user?broadcaster_id=' . constant("BROADCASTER_ID") . '&user_id=' . $user_id);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
-			// make api call and return response
-			return $this->makeApiCall( $apiParams );
+            $headers = array();
+            $headers[] = 'Authorization: Bearer ' . $this->_accessToken;
+            $headers[] = 'Client-Id: '. constant("TWITCH_CLIENT_ID");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            $result = curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+            }
+            
+		    $apiResponse = json_decode( $result, true );
+            return $httpcode;
 		}
 
 		/**
@@ -247,10 +250,7 @@ session_start();
                 $curlOptions[CURLOPT_POSTFIELDS] = http_build_query( $params['url_params'] );
 			} elseif ( 'GET' == $params['type'] ) { // get request things
 				$curlOptions[CURLOPT_URL] .= '?' . http_build_query( $params['url_params'] );
-			} elseif ( 'SUB' == $params['type']) {
-				$curlOptions[CURLOPT_URL] .= '?' . http_build_query( $params['url_params'] );
-			}
-
+			} 
 
 			// initialize curl
 			$ch = curl_init();

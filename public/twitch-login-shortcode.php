@@ -8,6 +8,7 @@ $eciTwitchApi = new eciTwitchApi(TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET);
 $twitchLoginUrl = $eciTwitchApi->getLoginUrl(TWITCH_REDIRECT_URI);
 
     ob_start();
+
     ?>
 <head>
     <style>

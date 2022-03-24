@@ -14,16 +14,14 @@ function dodocodes_function() {
         // try and log the user in with twitch
 		$twitchLogin = $eciTwitchApi->tryAndLoginWithTwitch( $_GET['code'], TWITCH_REDIRECT_URI );
        $subscriber = $twitchLogin['sub_status'];
-
+       //print_r($twitchLogin);
     }
     
     if ( isset( $twitchLogin['status'] ) && 'fail' != $twitchLogin['status'] ) {
-         print_r($twitchLogin['message']); 
 
     ob_start();
     ?>
     <center>
-        <?php print_r(plugin_dir_path(__FILE__) ); ?>
     <h3>DazzlingDuckGames Dodo Codes</h3>
     <hr>
     <a href="<?php echo LOGOUT_PAGE ?>"><button style="background-color: turquoise; border: none; border-radius: 5px; color: #333; /* Dark grey */ padding: 15px 32px">Logout</button></a>
@@ -34,15 +32,17 @@ function dodocodes_function() {
     <hr> 
     <?php if($subscriber == 404) { ?>
     <p>You are NOT subscribed to DazzlingDuckGames</p>
-    <?php } else if ($subscriber =! 404 ) { ?>
+    <?php } else if ($subscriber == 200 ) { ?>
     <p>You are subscribed to DazzlingDuckGames</p>
     <?php } else { ?>
         <p>Invalid User Subscription !!!!!!</p>
     <?php } ?>
+    <?php if ($subscriber == 404) { ?>
     <hr> 
     <p>Want to see all the codes?</p>
     <br>
     <p><a href="<?php echo TWITCH_SUBSCRIPTION_PAGE ?>">Click Here To Subscribe To DazzlingDuckGames</a> </p>
+    <?php } ?>
     <br>
     <table style="width:90%;" border="1">
     <tr>
@@ -55,21 +55,21 @@ function dodocodes_function() {
     $result = $wpdb->get_results ( "SELECT * FROM {$table_name}" );
     foreach ( $result as $print ) {
     ?>
-    <tr>
-    <?php if(($print->protection == 0) && ($subscriber == 404)) { ?>    
+<tr>
+    <?php if($print->protection == 0) { ?>    
     <td><?php echo $print->island_name;?></td>
-    <td><?php echo $print->dodo_code; } else if(($print->protection > 0) && ($subscriber == 404)) {?></td>
-    <td><?php echo $print->island_name;?></td>
-    <td><a href="<?php echo TWITCH_SUBSCRIPTION_PAGE ?>">Subscribe To Reveal</a> <?php } ?></td>
-    <?php
+    <td><?php echo $print->dodo_code; } else if($print->protection > 0) { ?></td>
+</tr>
+<tr>
+    <td><?php echo $print->island_name; ?></td> 
+    <?php if($subscriber == 404) { ?>
+    <td><a href="<?php echo TWITCH_SUBSCRIPTION_PAGE ?>">Subscribe to Reveal</a></td> <?php } else if ($subscriber == 200){?>
+        <td><?php echo $print->dodo_code; } } ?></td>
+    </tr>
+    
+        <?php
     }
     ?>
-    <?php if(($print->protection == 0) && ($subscriber != 404)) { ?>    
-    <td><?php echo $print->island_name;?></td>
-    <td><?php echo $print->dodo_code; } else if(($print->protection > 0) && ($subscriber != 404)) {?></td>
-    <td><?php echo $print->island_name;?></td>
-    <td><?php  echo $print->dodo_code;  } ?></td>
-    </tr>
 
     </table>
     </center>
